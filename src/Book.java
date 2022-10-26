@@ -10,7 +10,7 @@ public class Book {
 		this.title = "";
 		this.ISBN = "";
 		this.available = true;
-		this.reservedQueue = new MyQueue();
+		this.reservedQueue = new MyQueue<>();
 	}
 	
 	public void setTitle(String title) {
