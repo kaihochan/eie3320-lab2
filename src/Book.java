@@ -18,7 +18,7 @@ public class Book {
 	}
 	
 	public String getTitle() {
-		return this.title;
+		return title;
 	}
 	
 	public void setISBN(String ISBN) {
@@ -26,7 +26,7 @@ public class Book {
 	}
 	
 	public String getISBN() {
-		return this.ISBN;
+		return ISBN;
 	}
 	
 	public void setAvailable(boolean avaliable) {
@@ -34,7 +34,7 @@ public class Book {
 	}
 	
 	public boolean isAvailable() {
-		return this.available;
+		return available;
 	}
 	
 	public void setReservedQueue(MyQueue<String> reservedQueue) {
@@ -42,6 +42,6 @@ public class Book {
 	}
 	
 	public MyQueue<String> getReservedQueue() {
-		return this.reservedQueue;
+		return reservedQueue;
 	}
 }
