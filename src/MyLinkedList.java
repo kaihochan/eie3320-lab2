@@ -67,24 +67,55 @@ public class MyLinkedList<E> implements MyList<E> {
 	/** Remove the head node and
 	 *  return the object that is contained in the removed node. */
 	public E removeFirst() {
+		if (size == 0)
+			return null;
 		E element = head.element;
 		head = head.next;
 		size--;
+		if (head == null)
+			tail = head;
 		return element;
 	}
 
 	/** Remove the last node and
 	 * return the object that is contained in the removed node. */
 	public E removeLast() {
-		// Left as an exercise
-		return null;
+		if (size == 0)
+			return null;
+		E element = tail.element;
+		if (size == 1) {
+			head = tail = null;
+			size--;
+		}
+		else {
+			Node<E> current = head;
+			for (int i = 0; i < size - 2; i++)
+				current = current.next;
+			tail = current;
+			tail.next = null;
+			size--;
+		}
+		return element;
 	}
 
 	@Override /** Remove the element at the specified position in this 
 	 *  list. Return the element that was removed from the list. */
 	public E remove(int index) {   
-		// Left as an exercise
-		return null;
+		if (index < 0 || index >= size)
+			return null;
+		if (index == 0)
+			return removeFirst();
+		else if (index == size - 1)
+			return removeLast();
+		else {
+			Node<E> previous = head;
+			for (int i = 0; i < index; i++)
+				previous = previous.next;
+			Node<E> current = previous.next;
+			previous.next = current.next;
+			size--;
+			return current.element;
+		}
 	}
 
 	@Override /** Override toString() to return elements in the list */
@@ -196,7 +227,7 @@ public class MyLinkedList<E> implements MyList<E> {
 		@Override
 		// remove the last element returned by the iterator
 		public void remove() {
-			MyLinkedList.this.remove(index);	
+			MyLinkedList.this.remove(index - 1);	
 		}
 	}
 
