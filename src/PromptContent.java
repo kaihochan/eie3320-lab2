@@ -1,3 +1,4 @@
+
 /**
  * Write a description of class UI here.
  *
@@ -29,11 +30,7 @@ public class PromptContent extends JFrame {
                //all cells should return false to protect the cells from direct editing
                return false;
             }
-<<<<<<< HEAD
-        }; 
-=======
         };
->>>>>>> 8317aa92b33d09c322720b45bad5fc046fb6383e
         Object column[] = { "ISBN", "Title", "Available"};
         final Object row[] = new Object[3];
         model.setColumnIdentifiers(column);
@@ -60,10 +57,7 @@ public class PromptContent extends JFrame {
         JButton add = new JButton("Add");
         JButton edit = new JButton("Edit");
         JButton save = new JButton("Save");
-<<<<<<< HEAD
-=======
         //Disable save button
->>>>>>> 8317aa92b33d09c322720b45bad5fc046fb6383e
         save.setEnabled(false);
         final Object savedindex[] = new Object[1];
         JButton delete = new JButton("Delete");
@@ -93,13 +87,10 @@ public class PromptContent extends JFrame {
         //Add functions to the buttons
         add.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) { 
-<<<<<<< HEAD
-=======
                 //Remove filter
                 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
                 sorter.setRowFilter(null);
                 bookrecord.setRowSorter(sorter);
->>>>>>> 8317aa92b33d09c322720b45bad5fc046fb6383e
                 //Check if isbn or title is empty
                 if(isbn.getText().equals("") || title.getText().equals("")) {
                     JOptionPane.showMessageDialog(null, "Error: ISBN and Title required.");
@@ -128,13 +119,10 @@ public class PromptContent extends JFrame {
         
         load.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-=======
                 //Remove filter
                 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
                 sorter.setRowFilter(null);
                 bookrecord.setRowSorter(sorter);
->>>>>>> 8317aa92b33d09c322720b45bad5fc046fb6383e
                 Boolean exist = false;
                 //Same as add function
                 for(int i=0; i<bookrecord.getRowCount(); i++) {
@@ -194,13 +182,10 @@ public class PromptContent extends JFrame {
         
         edit.addActionListener(new ActionListener() { 
             public void actionPerformed(ActionEvent e) {
-<<<<<<< HEAD
-=======
                 //Remove filter
                 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
                 sorter.setRowFilter(null);
                 bookrecord.setRowSorter(sorter);
->>>>>>> 8317aa92b33d09c322720b45bad5fc046fb6383e
                 //Check if isbn field is empty or not
                 if(!(isbn.getText().equals(""))) {
                     int index = 0;
@@ -255,8 +240,6 @@ public class PromptContent extends JFrame {
                         bookrecord.setValueAt(row[0], Integer.valueOf(savedindex[0].toString()), 0);
                         bookrecord.setValueAt(row[1], Integer.valueOf(savedindex[0].toString()), 1);
                         bookrecord.setValueAt(row[2], Integer.valueOf(savedindex[0].toString()), 2);
-<<<<<<< HEAD
-=======
                         isbn.setText("");
                         title.setText("");
                         //enable and clear row selection
@@ -290,41 +273,8 @@ public class PromptContent extends JFrame {
                     }
                     if(match) {
                         ((DefaultTableModel)bookrecord.getModel()).removeRow(index);
->>>>>>> 8317aa92b33d09c322720b45bad5fc046fb6383e
                         isbn.setText("");
                         title.setText("");
-                        //enable and clear row selection
-                        bookrecord.setRowSelectionAllowed(true);
-                        bookrecord.clearSelection();
-                        //disable save button
-                        save.setEnabled(false); add.setEnabled(true); edit.setEnabled(true); delete.setEnabled(true);
-                        search.setEnabled(true); more.setEnabled(true); load.setEnabled(true); displayall.setEnabled(true);
-                        displayall_isbn.setEnabled(true); displayall_title.setEnabled(true); exit.setEnabled(true);
-                    }
-                }  
-            }
-        });
-        
-        delete.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) {
-                //Check if isbn field is empty or not
-                if(!(isbn.getText().equals(""))) {
-                    int index = 0;
-                    boolean match = false;
-                    //Check the table to search the title based on the ISBN
-                    for(int i=0; i<bookrecord.getRowCount(); i++) {
-                        if(bookrecord.getValueAt(i,0).toString().equals(isbn.getText())) {
-                            match = true;
-                            index = i;
-                        }
-                    }
-                    if(match) {
-                        ((DefaultTableModel)bookrecord.getModel()).removeRow(index);
-                        isbn.setText("");
-                        title.setText("");
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(null, "Error: ISBN doesn't exist.");
                     }
                     else {
                         JOptionPane.showMessageDialog(null, "Error: ISBN doesn't exist.");
