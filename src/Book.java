@@ -37,10 +37,6 @@ public class Book {
 		return available;
 	}
 	
-	public void setReservedQueue(MyQueue<String> reservedQueue) {
-		this.reservedQueue = reservedQueue;
-	}
-	
 	public MyQueue<String> getReservedQueue() {
 		return reservedQueue;
 	}
