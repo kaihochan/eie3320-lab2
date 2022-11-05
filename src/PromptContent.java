@@ -8,10 +8,7 @@
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.util.Date;
-import java.util.List;
-import java.util.ArrayList;
 
 public class PromptContent extends JFrame {
     private JTextArea content = new JTextArea(
@@ -27,7 +24,6 @@ public class PromptContent extends JFrame {
         }
     };
     private Object column[] = { "ISBN", "Title", "Available"};
-    final Object row[] = new Object[3];
     private JScrollPane scrollpane = new JScrollPane(bookrecord);
 
     private JTextField isbn = new JTextField(10);
@@ -36,7 +32,6 @@ public class PromptContent extends JFrame {
     private JButton add = new JButton("Add");
     private JButton edit = new JButton("Edit");
     private JButton save = new JButton("Save");
-    final Object savedindex[] = new Object[1];
     private JButton delete = new JButton("Delete");
     private JButton search = new JButton("Search");
     private JButton more = new JButton("More>>");
@@ -92,233 +87,17 @@ public class PromptContent extends JFrame {
         bottompanel.add(buttonset2);
         
         //Add functions to the buttons
-        add.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) { 
-                //Remove filter
-                TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-                sorter.setRowFilter(null);
-                bookrecord.setRowSorter(sorter);
-                //Check if isbn or title is empty
-                if(isbn.getText().equals("") || title.getText().equals("")) {
-                    JOptionPane.showMessageDialog(null, "Error: ISBN and Title required.");
-                }
-                else {
-                    boolean repeat = false;
-                    //Going through the table to check if ISBN is repeated or not
-                    for(int i=0; i<bookrecord.getRowCount(); i++) {
-                        if(bookrecord.getValueAt(i,0).toString().equals(isbn.getText())) {
-                            repeat = true;
-                            JOptionPane.showMessageDialog(null, "Error: ISBN already exists.");
-                        }
-                    }
-                    //Add to the table
-                    if(!repeat) {
-                        row[0] = isbn.getText();
-                        row[1] = title.getText();
-                        row[2] = "true";
-                        ((DefaultTableModel)bookrecord.getModel()).addRow(row);
-                        isbn.setText("");
-                        title.setText("");
-                    }
-                }
-            }
-        });
-        
-        load.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) {
-                //Remove filter
-                TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-                sorter.setRowFilter(null);
-                bookrecord.setRowSorter(sorter);
-                Boolean exist = false;
-                //Same as add function
-                for(int i=0; i<bookrecord.getRowCount(); i++) {
-                    if(bookrecord.getValueAt(i,0).toString().equals("0131450913")) {
-                        exist = true;
-                        JOptionPane.showMessageDialog(null, "Error: Test data already exists.");
-                    }
-                }
-                if(!exist) {
-                    row[0] = "0131450913";
-                    row[1] = "HTML How to Program";
-                    row[2] = "true";
-                    ((DefaultTableModel)bookrecord.getModel()).addRow(row);
-                }
-                
-                exist = false;
-                for(int i=0; i<bookrecord.getRowCount(); i++) {
-                    if(bookrecord.getValueAt(i,0).toString().equals("0131857576")) {
-                        exist = true;
-                        JOptionPane.showMessageDialog(null, "Error: Test data already exists.");
-                    }
-                }
-                if(!exist) {
-                    row[0] = "0131857576";
-                    row[1] = "C++ How to Program";
-                    row[2] = "true";
-                    ((DefaultTableModel)bookrecord.getModel()).addRow(row);
-                }
-                
-                exist = false;
-                for(int i=0; i<bookrecord.getRowCount(); i++) {
-                    if(bookrecord.getValueAt(i,0).toString().equals("0132222205")) {
-                        exist = true;
-                        JOptionPane.showMessageDialog(null, "Error: Test data already exists.");
-                    }
-                }
-                if(!exist) {
-                    row[0] = "0132222205";
-                    row[1] = "Java How to Program";
-                    row[2] = "true";
-                    ((DefaultTableModel)bookrecord.getModel()).addRow(row);
-                }
-            }
-        });
-        
-        bookrecord.addMouseListener(new MouseAdapter() {
-            //Click event on the table to set text of ISBN and title
-            public void mouseClicked(MouseEvent e) {
-                if(!save.isEnabled()) {
-                    //disable set text when save button is enabled
-                    int index = bookrecord.getSelectedRow();
-                    isbn.setText(bookrecord.getValueAt(index, 0).toString());
-                    title.setText(bookrecord.getValueAt(index, 1).toString());
-                }
-            }
-        });
-        
-        edit.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) {
-                //Remove filter
-                TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-                sorter.setRowFilter(null);
-                bookrecord.setRowSorter(sorter);
-                //Check if isbn field is empty or not
-                if(!(isbn.getText().equals(""))) {
-                    int index = 0;
-                    boolean match = false;
-                    //Check the table to search the title based on the ISBN
-                    for(int i=0; i<bookrecord.getRowCount(); i++) {
-                        if(bookrecord.getValueAt(i,0).toString().equals(isbn.getText())) {
-                            match = true;
-                            index = i;
-                        }
-                    }
-                    if(match) {
-                        title.setText(bookrecord.getValueAt(index, 1).toString());
-                        //local variable used
-                        savedindex[0] = index;
-                        //disable row selection
-                        bookrecord.setRowSelectionAllowed(false);
-                        //enable save button
-                        save.setEnabled(true); add.setEnabled(false); edit.setEnabled(false); delete.setEnabled(false);
-                        search.setEnabled(false); more.setEnabled(false); load.setEnabled(false); displayall.setEnabled(false);
-                        displayall_isbn.setEnabled(false); displayall_title.setEnabled(false); exit.setEnabled(false);
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(null, "Error: ISBN doesn't exist.");
-                    }
-                }
-            }
-        });
-        
-        save.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) {
-                //check if the isbn or title is empty
-                if(isbn.getText().equals("") || title.getText().equals("")) {
-                    JOptionPane.showMessageDialog(null, "Error: ISBN and Title required.");
-                }
-                else {
-                    boolean repeat = false;
-                    //Going through the table to check if ISBN is repeated or not except the current selected row
-                    for(int i=0; i<bookrecord.getRowCount(); i++) {
-                        if(Integer.valueOf(savedindex[0].toString()) == i) {
-                            continue;
-                        }
-                        else if(bookrecord.getValueAt(i,0).toString().equals(isbn.getText())) {
-                            repeat = true;
-                            JOptionPane.showMessageDialog(null, "Error: ISBN already exists.");
-                        }
-                    }
-                    if(!repeat) {
-                        row[0] = isbn.getText();
-                        row[1] = title.getText();
-                        row[2] = "true";
-                        bookrecord.setValueAt(row[0], Integer.valueOf(savedindex[0].toString()), 0);
-                        bookrecord.setValueAt(row[1], Integer.valueOf(savedindex[0].toString()), 1);
-                        bookrecord.setValueAt(row[2], Integer.valueOf(savedindex[0].toString()), 2);
-                        isbn.setText("");
-                        title.setText("");
-                        //enable and clear row selection
-                        bookrecord.setRowSelectionAllowed(true);
-                        bookrecord.clearSelection();
-                        //disable save button
-                        save.setEnabled(false); add.setEnabled(true); edit.setEnabled(true); delete.setEnabled(true);
-                        search.setEnabled(true); more.setEnabled(true); load.setEnabled(true); displayall.setEnabled(true);
-                        displayall_isbn.setEnabled(true); displayall_title.setEnabled(true); exit.setEnabled(true);
-                    }
-                }  
-            }
-        });
-        
-        delete.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) {
-                //Remove filter
-                TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-                sorter.setRowFilter(null);
-                bookrecord.setRowSorter(sorter);
-                //Check if isbn field is empty or not
-                if(!(isbn.getText().equals(""))) {
-                    int index = 0;
-                    boolean match = false;
-                    //Check the table to search the title based on the ISBN
-                    for(int i=0; i<bookrecord.getRowCount(); i++) {
-                        if(bookrecord.getValueAt(i,0).toString().equals(isbn.getText())) {
-                            match = true;
-                            index = i;
-                        }
-                    }
-                    if(match) {
-                        ((DefaultTableModel)bookrecord.getModel()).removeRow(index);
-                        isbn.setText("");
-                        title.setText("");
-                    }
-                    else {
-                        JOptionPane.showMessageDialog(null, "Error: ISBN doesn't exist.");
-                    }
-                }
-            }
-        });
-
-        search.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) {
-                //Check if the text fields are empty
-                if(!(isbn.getText().equals("") && title.getText().equals(""))) {
-                    RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {
-                        public boolean include(Entry entry) {
-                            String book_isbn = (String) entry.getValue(0);
-                            String book_title = (String) entry.getValue(1);
-                            if((book_isbn.matches("(.*)" + isbn.getText() + "(.*)")) && !(isbn.getText().equals(""))) {
-                                return true;
-                            }
-                            else if((book_title.matches("(.*)" + title.getText() + "(.*)")) && !(title.getText().equals(""))) {
-                                return true;
-                            }
-                            return false;
-                        }
-                    };
-                    TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-                    sorter.setRowFilter(filter);
-                    bookrecord.setRowSorter(sorter);
-                }
-            }
-        });
-
-        displayall_isbn.addActionListener(new ActionListener() { 
-            public void actionPerformed(ActionEvent e) {
-                
-            }
-        });
+        add.addActionListener(EventListener.add_button(bookrecord, model, isbn, title));
+        load.addActionListener(EventListener.load_button(bookrecord, model, isbn, title));
+        bookrecord.addMouseListener(EventListener.bookrecord_click(bookrecord, isbn, title, save));
+        edit.addActionListener(EventListener.edit_button(bookrecord, model,isbn, title, 
+        add, edit, save, delete, search, more, load, displayall,
+        displayall_isbn, displayall_title, exit));
+        save.addActionListener(EventListener.save_button(bookrecord, model,isbn, title, 
+        add, edit, save, delete, search, more, load, displayall,
+        displayall_isbn, displayall_title, exit));
+        delete.addActionListener(EventListener.delete_button(bookrecord, model, isbn, title));
+        search.addActionListener(EventListener.search_button(bookrecord, model, isbn, title));
         
         //Panel for output all the content
         JPanel outputpanel = new JPanel(new BorderLayout(0,-5));
