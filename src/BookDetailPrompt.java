@@ -27,18 +27,23 @@ public class BookDetailPrompt extends JFrame {
 	JButton reserveButton = new JButton("Reserve");
 	JButton waitingQueueButton = new JButton("Waiting Queue");
 	
-	public BookDetailPrompt(Book book) {		
+	public BookDetailPrompt(Book book) {
+		// set to border layout, title is book name, centered when showed, disposed when closed
 		setLayout(new BorderLayout());
 		setTitle(book.getTitle());
 		setSize(475, 375);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
+		// book detail are shown on top of the frame, set to not editable for users
 		bookDetail = new JTextArea(String.format("ISBN: %s%nTitle: %s%nAvailable: %s%n", book.getISBN(), book.getTitle(), book.isAvailable()));
 		bookDetail.setEditable(false);
 		
+		// system message set to not editable for users
 		systemMessage.setEditable(false);
 		
+		// action listener for the borrow button
+		// disable borrow button and enable other buttons
 		borrowButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				returnButton.setEnabled(true);
@@ -50,6 +55,8 @@ public class BookDetailPrompt extends JFrame {
 			}
 		});
 		
+		// action listener for the return button
+		// automatically borrow to the first person in the queue if exist
 		returnButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				systemMessage.setText("The book is returned.\n");
@@ -66,6 +73,8 @@ public class BookDetailPrompt extends JFrame {
 			}
 		});
 		
+		// action listener for the reserve button
+		// show pop up window to ask for the name and then add to the queue
 		reserveButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				 String name = JOptionPane.showInputDialog("What's your name?");
@@ -74,6 +83,8 @@ public class BookDetailPrompt extends JFrame {
 			}
 		});
 		
+		// action listener for the waiting queue button
+		// show all pending users in the system message
 		waitingQueueButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String output = "The waiting queue:\n";
@@ -83,16 +94,19 @@ public class BookDetailPrompt extends JFrame {
 			}
 		});
 		
-		//buttonPanel.setSize(WIDTH, HEIGHT);
+		// add button components to the button panel
 		buttonPanel.add(borrowButton);
 		buttonPanel.add(returnButton);
 		buttonPanel.add(reserveButton);
 		buttonPanel.add(waitingQueueButton);
 		
+		// add relevant components to the frame
 		add(bookDetail, BorderLayout.NORTH);
 		add(buttonPanel, BorderLayout.CENTER);
 		add(systemMessage, BorderLayout.SOUTH);
 		
+		// disable return, reserve and waiting queue button if book is available
+		// disable borrow if the book is not available
 		if (book.isAvailable()) {
 			returnButton.setEnabled(false);
 			reserveButton.setEnabled(false);
