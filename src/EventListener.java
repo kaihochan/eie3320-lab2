@@ -14,11 +14,14 @@ public class EventListener {
     final static Object row[] = new Object[3];
     final static Object savedindex[] = new Object[1];
 
-    public EventListener() {
+    //new Book array
+    final static Book loadData[] = {new Book(), new Book(), new Book()};
 
+    public EventListener() {
+        
     };
 
-    public static ActionListener add_button(JTable bookrecord, DefaultTableModel model, JTextField isbn, JTextField title) {
+    public static ActionListener add_button(JTable bookrecord, DefaultTableModel model, JTextField isbn, JTextField title, MyLinkedList<Book> bookList) {
         ActionListener add_listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) { 
                 //Remove filter
@@ -40,12 +43,17 @@ public class EventListener {
                     }
                     //Add to the table
                     if(!repeat) {
-                        row[0] = isbn.getText();
-                        row[1] = title.getText();
-                        row[2] = "true";
+                        //Add to book list
+                        Book book = new Book();
+                        book.setTitle(isbn.getText());
+                        book.setISBN(title.getText());
+                        bookList.add(book);
+                        row[0] = bookList.getLast().getISBN();
+                        row[1] = bookList.getLast().getTitle();
+                        row[2] = String.valueOf(bookList.getLast().isAvailable());
                         ((DefaultTableModel)bookrecord.getModel()).addRow(row);
                         isbn.setText("");
-                        title.setText("");
+                        title.setText(""); 
                     }
                 }
             }
@@ -53,54 +61,34 @@ public class EventListener {
         return add_listener;
     }
 
-    public static ActionListener load_button(JTable bookrecord, DefaultTableModel model, JTextField isbn, JTextField title) {
+    public static ActionListener load_button(JTable bookrecord, DefaultTableModel model, MyLinkedList<Book> bookList) {
         ActionListener load_listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //Remove filter
                 TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
                 sorter.setRowFilter(null);
                 bookrecord.setRowSorter(sorter);
-                Boolean exist = false;
-                //Same as add function
-                for(int i=0; i<bookrecord.getRowCount(); i++) {
-                    if(bookrecord.getValueAt(i,0).toString().equals("0131450913")) {
-                        exist = true;
-                        JOptionPane.showMessageDialog(null, "Error: Test data already exists.");
+                //Set title and ISBN
+                loadData[0].setTitle("HTML How to Program");
+                loadData[0].setISBN("0131450913");
+                loadData[1].setTitle("C++ How to Program");
+                loadData[1].setISBN("0131857576");
+                loadData[2].setTitle("Java How to Program");
+                loadData[2].setISBN("0132222205");
+                for (Book book: loadData) {
+                    if (!bookList.contains(book)) {
+                        bookList.add(book);
+                        row[0] = bookList.getLast().getISBN();
+                        row[1] = bookList.getLast().getTitle();
+                        row[2] = String.valueOf(bookList.getLast().isAvailable());
+                        ((DefaultTableModel)bookrecord.getModel()).addRow(row);
                     }
-                }
-                if(!exist) {
-                    row[0] = "0131450913";
-                    row[1] = "HTML How to Program";
-                    row[2] = "true";
-                    ((DefaultTableModel)bookrecord.getModel()).addRow(row);
-                }
-                
-                exist = false;
-                for(int i=0; i<bookrecord.getRowCount(); i++) {
-                    if(bookrecord.getValueAt(i,0).toString().equals("0131857576")) {
-                        exist = true;
-                        JOptionPane.showMessageDialog(null, "Error: Test data already exists.");
-                    }
-                }
-                if(!exist) {
-                    row[0] = "0131857576";
-                    row[1] = "C++ How to Program";
-                    row[2] = "true";
-                    ((DefaultTableModel)bookrecord.getModel()).addRow(row);
-                }
-                
-                exist = false;
-                for(int i=0; i<bookrecord.getRowCount(); i++) {
-                    if(bookrecord.getValueAt(i,0).toString().equals("0132222205")) {
-                        exist = true;
-                        JOptionPane.showMessageDialog(null, "Error: Test data already exists.");
-                    }
-                }
-                if(!exist) {
-                    row[0] = "0132222205";
-                    row[1] = "Java How to Program";
-                    row[2] = "true";
-                    ((DefaultTableModel)bookrecord.getModel()).addRow(row);
+                    else
+                        JOptionPane.showMessageDialog(
+                            null, 
+                            String.format("Error: \"%s\" already exists.", book.getTitle()),
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE);
                 }
             }
         };
@@ -162,8 +150,8 @@ public class EventListener {
     }
 
     public static ActionListener save_button(JTable bookrecord, DefaultTableModel model, JTextField isbn, JTextField title, 
-    JButton add, JButton edit, JButton save, JButton delete, JButton search, JButton more, JButton load, JButton displayall,
-    JButton displayall_isbn, JButton displayall_title, JButton exit) {
+    MyLinkedList<Book> bookList, JButton add, JButton edit, JButton save, JButton delete, JButton search, JButton more, 
+    JButton load, JButton displayall, JButton displayall_isbn, JButton displayall_title, JButton exit) {
         ActionListener save_listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //check if the isbn or title is empty
@@ -183,14 +171,32 @@ public class EventListener {
                         }
                     }
                     if(!repeat) {
-                        row[0] = isbn.getText();
-                        row[1] = title.getText();
-                        row[2] = "true";
-                        bookrecord.setValueAt(row[0], Integer.valueOf(savedindex[0].toString()), 0);
-                        bookrecord.setValueAt(row[1], Integer.valueOf(savedindex[0].toString()), 1);
-                        bookrecord.setValueAt(row[2], Integer.valueOf(savedindex[0].toString()), 2);
+                        int index = Integer.valueOf(savedindex[0].toString());
+                        //Edit BookList
+                        //Have Bug have fun
+                        Book book = new Book();
+                        book.setTitle(title.getText());
+                        book.setISBN(isbn.getText());
+                        System.out.println("Index: " + index);
+                        bookList.remove(index);
+                        for(Book storedbook: bookList) {
+                            System.out.println(storedbook.getISBN());
+                        }
+                        System.out.println();
+                        bookList.add(index, book);
+                        for(Book storedbook: bookList) {
+                            System.out.println(storedbook.getISBN());
+                        }
+                        //Edit table based on the bookList
+                        row[0] = bookList.get(index).getISBN();
+                        row[1] = bookList.get(index).getTitle();
+                        row[2] = String.valueOf(bookList.get(index).isAvailable());
+                        bookrecord.setValueAt(row[0], index, 0);
+                        bookrecord.setValueAt(row[1], index, 1);
+                        bookrecord.setValueAt(row[2], index, 2);
                         isbn.setText("");
                         title.setText("");
+
                         //enable and clear row selection
                         bookrecord.setRowSelectionAllowed(true);
                         bookrecord.clearSelection();
@@ -205,7 +211,7 @@ public class EventListener {
         return save_listener;
     }
 
-    public static ActionListener delete_button(JTable bookrecord, DefaultTableModel model, JTextField isbn, JTextField title) {
+    public static ActionListener delete_button(JTable bookrecord, DefaultTableModel model, JTextField isbn, JTextField title, MyLinkedList<Book> bookList) {
         ActionListener delete_listener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 //Remove filter
@@ -224,6 +230,12 @@ public class EventListener {
                         }
                     }
                     if(match) {
+                        //Delete from linkedlist
+                        //Have Bug have fun
+                        bookList.remove((int)index);
+                        for(Book storedbook: bookList) {
+                            System.out.println(storedbook.getISBN());
+                        }
                         ((DefaultTableModel)bookrecord.getModel()).removeRow(index);
                         isbn.setText("");
                         title.setText("");
@@ -262,5 +274,19 @@ public class EventListener {
             }
         };
         return search_listener;
+    }
+
+    public static ActionListener more_button(JTable bookrecord, MyLinkedList<Book> bookList) {
+        ActionListener more_listener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (bookrecord.getSelectedRow() == -1) {
+                    JOptionPane.showMessageDialog(null, "Book is not selected.", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                BookDetailPrompt bookFrame = new BookDetailPrompt(bookList.get(bookrecord.getSelectedRow()));
+                bookFrame.setVisible(true);
+            }
+        };
+        return more_listener;
     }
 }
