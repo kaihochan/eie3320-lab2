@@ -1,3 +1,11 @@
+
+/**
+ * @title   EIE3320 Lab 2: Library Admin System
+ * @author  CHAN Kai Ho 19057769D
+ * @author  SZE Kin Sang 19062606D
+ * @date    1 Nov 2022
+ */
+
 public class MyLinkedList<E> implements MyList<E> {
 	protected Node<E> head, tail;
 	protected int size = 0; // Number of elements in the list

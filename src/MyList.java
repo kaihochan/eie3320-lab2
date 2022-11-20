@@ -1,4 +1,11 @@
 
+/**
+ * @title   EIE3320 Lab 2: Library Admin System
+ * @author  CHAN Kai Ho 19057769D
+ * @author  SZE Kin Sang 19062606D
+ * @date    26 Oct 2022
+ */
+
 import java.util.Collection;
 
 public interface MyList<E> extends java.util.Collection<E> {

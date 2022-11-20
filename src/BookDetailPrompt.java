@@ -1,3 +1,11 @@
+
+/**
+ * @title   EIE3320 Lab 2: Library Admin System
+ * @author  CHAN Kai Ho 19057769D
+ * @author  SZE Kin Sang 19062606D
+ * @date    3 Nov 2022
+ */
+
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

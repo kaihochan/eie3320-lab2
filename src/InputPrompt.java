@@ -1,10 +1,11 @@
 
 /**
- * Write a description of class Frame here.
- *
- * @author (your name)
- * @version (a version number or a date)
+ * @title   EIE3320 Lab 2: Library Admin System
+ * @author  CHAN Kai Ho 19057769D
+ * @author  SZE Kin Sang 19062606D
+ * @date    3 Nov 2022
  */
+
 import javax.swing.JFrame;
 
 public class InputPrompt

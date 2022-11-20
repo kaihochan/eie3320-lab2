@@ -1,4 +1,11 @@
 
+/**
+ * @title   EIE3320 Lab 2: Library Admin System
+ * @author  CHAN Kai Ho 19057769D
+ * @author  SZE Kin Sang 19062606D
+ * @date    3 Nov 2022
+ */
+
 public class Book {
 	private String title;					// store the title of the book
 	private String ISBN;					// store the ISBN of the book
