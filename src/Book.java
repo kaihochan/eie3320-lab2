@@ -60,8 +60,8 @@ public class Book {
 	 * Set the availability of Book
 	 * @param avaliable availability of the book
 	 */
-	public void setAvailable(boolean avaliable) {
-		this.available = avaliable;
+	public void setAvailable(boolean available) {
+		this.available = available;
 	}
 	
 	/*
