@@ -19,11 +19,15 @@ public class InputPrompt
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         */
+        /*
         Book book = new Book();
         book.setISBN("6969696969");
         book.setTitle("The 69 Ways");
         book.setAvailable(false);
     	BookDetailPrompt frame2 = new BookDetailPrompt(book);
     	frame2.setVisible(true);
+    	*/
+    	MainPrompt frame3 = new MainPrompt();
+    	frame3.setVisible(true);
     }
 }
