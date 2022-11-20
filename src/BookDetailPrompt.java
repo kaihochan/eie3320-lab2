@@ -19,13 +19,18 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 public class BookDetailPrompt extends JFrame {
-	JTextArea bookDetail;
-	JTextArea systemMessage = new JTextArea();
-	JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-	JButton borrowButton = new JButton("Borrow");
-	JButton returnButton = new JButton("Return");
-	JButton reserveButton = new JButton("Reserve");
-	JButton waitingQueueButton = new JButton("Waiting Queue");
+	// text area for book's detail and system message
+	private JTextArea bookDetail;
+	private JTextArea systemMessage = new JTextArea();
+	
+	// panel for storing the buttons
+	private JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	
+	// menu buttons
+	private JButton borrowButton = new JButton("Borrow");
+	private JButton returnButton = new JButton("Return");
+	private JButton reserveButton = new JButton("Reserve");
+	private JButton waitingQueueButton = new JButton("Waiting Queue");
 	
 	public BookDetailPrompt(Book book) {
 		// set to border layout, title is book name, centered when showed, disposed when closed
