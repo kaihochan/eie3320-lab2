@@ -117,7 +117,7 @@ public class MyLinkedList<E> implements MyList<E> {
 			return removeLast();
 		else {
 			Node<E> previous = head;
-			for (int i = 0; i < index; i++)
+			for (int i = 1; i < index; i++)
 				previous = previous.next;
 			Node<E> current = previous.next;
 			previous.next = current.next;

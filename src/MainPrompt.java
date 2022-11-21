@@ -1,8 +1,18 @@
+
+/**
+ * @title   EIE3320 Lab 2: Library Admin System
+ * @author  CHAN Kai Ho 19057769D
+ * @author  SZE Kin Sang 19062606D
+ * @date    15 Nov 2022
+ */
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.util.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableRowSorter;
+import java.util.List;
 
 public class MainPrompt extends JFrame {
 	private MyLinkedList<Book> bookList = new MyLinkedList<>();
@@ -33,6 +43,8 @@ public class MainPrompt extends JFrame {
     private JButton sortByTitleButton = new JButton("Display All by Title");
     private JButton exitButton = new JButton("Exit");
     
+    private TableRowSorter<BookTableModel> sorter = new TableRowSorter<BookTableModel>(bookModel);
+    
     private boolean reversedISBN = false;
     private boolean reversedTitle = false;
     private int selectedIndex = -1;
@@ -44,13 +56,18 @@ public class MainPrompt extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		// JTable configuration
+		bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		bookTable.getTableHeader().setReorderingAllowed(false);
+		
+		
 		// JTable mouse listener
 		bookTable.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 if(!saveButton.isEnabled()) {
                     //disable set text when save button is enabled
-                    ISBNField.setText(bookList.get(bookTable.getSelectedRow()).getISBN());
-                    titleField.setText(bookList.get(bookTable.getSelectedRow()).getTitle());
+                    ISBNField.setText(bookList.get(bookTable.convertRowIndexToModel(bookTable.getSelectedRow())).getISBN());
+                    titleField.setText(bookList.get(bookTable.convertRowIndexToModel(bookTable.getSelectedRow())).getTitle());
                 }
             }
         });
@@ -87,7 +104,7 @@ public class MainPrompt extends JFrame {
                     return;
                 }
 				if (bookTable.getSelectedRow() != -1) {
-					selectedIndex = bookTable.getSelectedRow();
+					selectedIndex = bookTable.convertRowIndexToModel(bookTable.getSelectedRow());
 					toggleButtonForEdit(true);
 					return;
 				}
@@ -138,6 +155,7 @@ public class MainPrompt extends JFrame {
                     return;
                 }
 				if (bookTable.getSelectedRow() != -1) {
+					System.out.printf("SR:%s, CRI:%s%n", bookTable.getSelectedRow(), bookTable.convertRowIndexToModel(bookTable.getSelectedRow()));
 					bookModel.remove(bookTable.getSelectedRow());
 					return;
 				}
@@ -159,6 +177,24 @@ public class MainPrompt extends JFrame {
 		searchButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateContent();
+				if (ISBNField.getText().isEmpty() && titleField.getText().isEmpty()) {
+                    return;
+                }
+                RowFilter<Object, Object> filter = new RowFilter<Object, Object>() {
+                    public boolean include(Entry entry) {
+                        String book_isbn = (String) entry.getValue(0);
+                        String book_title = (String) entry.getValue(1);
+                        if((book_isbn.matches("(.*)" + ISBNField.getText() + "(.*)")) && !(ISBNField.getText().equals(""))) {
+                            return true;
+                        }
+                        else if((book_title.matches("(.*)" + titleField.getText() + "(.*)")) && !(titleField.getText().equals(""))) {
+                            return true;
+                        }
+                        return false;
+                    }
+                };
+                sorter.setRowFilter(filter);
+                bookTable.setRowSorter(sorter);
 			}
 		});
 		
@@ -172,7 +208,7 @@ public class MainPrompt extends JFrame {
                 }
 				BookDetailPrompt frame;
 				if (bookTable.getSelectedRow() != -1) {
-					frame = new BookDetailPrompt(bookList.get(bookTable.getSelectedRow()));
+					frame = new BookDetailPrompt(bookList.get(bookTable.convertRowIndexToModel(bookTable.getSelectedRow())));
 					frame.setVisible(true);
 					return;
 				}
@@ -216,22 +252,55 @@ public class MainPrompt extends JFrame {
 		displayAllButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				updateContent();
+                sorter.setSortKeys(null);
+                sorter.setRowFilter(null);
+                bookTable.setRowSorter(sorter);
 			}
 		});
 		
-		// Display All by ISBN, JButton action listener (NOT STARTED)
-		sortByISBNButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateContent();
-			}
-		});
+		// Display All by ISBN, JButton action listener
+        sortByISBNButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateContent();
+                if(!reversedISBN) {
+                    List<RowSorter.SortKey> sortKeys = new ArrayList<>(1);
+                    sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+                    sorter.setSortKeys(sortKeys);
+                    bookTable.setRowSorter(sorter);
+                    reversedISBN = true;
+                }
+                else {
+                    List<RowSorter.SortKey> sortKeys = new ArrayList<>(1);
+                    sortKeys.add(new RowSorter.SortKey(0, SortOrder.DESCENDING));
+                    sorter.setSortKeys(sortKeys);
+                    bookTable.setRowSorter(sorter);
+                    reversedISBN = false;
+                }
+            }
+        });
 		
-		// Display All by Title, JButton action listener (NOT STARTED)
-		sortByTitleButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				updateContent();
-			}
-		});
+		// Display All by Title, JButton action listener
+        sortByTitleButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateContent();
+                if(!reversedTitle) {
+                    List<RowSorter.SortKey> sortKeys = new ArrayList<>(2);
+                    sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+                    sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+                    sorter.setSortKeys(sortKeys);
+                    bookTable.setRowSorter(sorter);
+                    reversedTitle = true;
+                }
+                else {
+                    List<RowSorter.SortKey> sortKeys = new ArrayList<>(2);
+                    sortKeys.add(new RowSorter.SortKey(1, SortOrder.DESCENDING));
+                    sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+                    sorter.setSortKeys(sortKeys);
+                    bookTable.setRowSorter(sorter);
+                    reversedTitle = false;
+                }
+            }
+        });
 		
 		// Exit, JButton action listener
 		exitButton.addActionListener(new ActionListener() {
@@ -319,7 +388,7 @@ public class MainPrompt extends JFrame {
 			switch(col) {
 				case 0:	return bookList.get(row).getISBN();
 				case 1:	return bookList.get(row).getTitle();
-				case 2: return bookList.get(row).isAvailable();
+				case 2: return String.valueOf(bookList.get(row).isAvailable());
 			}
 			return null;
 		}
@@ -329,7 +398,7 @@ public class MainPrompt extends JFrame {
 		}
 		
 		public Class getColumnClass(int col) {
-			return col == 2 ? Boolean.class : String.class;
+			return String.class;
 		}
 		
 		public boolean isCellEditable(int row, int col) {
@@ -342,8 +411,8 @@ public class MainPrompt extends JFrame {
 		}
 		
 		public void remove(int index) {
-			bookList.remove(index);
-			fireTableRowsInserted(bookList.size(), bookList.size());
+			bookList.remove(bookTable.convertRowIndexToModel(index));
+			fireTableRowsDeleted(index, index);
 		}
     }
     
