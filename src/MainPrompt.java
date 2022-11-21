@@ -156,6 +156,8 @@ public class MainPrompt extends JFrame {
                 }
 				if (ISBNField.getText().isEmpty()) {
 					bookModel.remove(bookTable.getSelectedRow());
+					ISBNField.setText("");
+					titleField.setText("");
 					return;
 				}
 				else {
@@ -164,6 +166,8 @@ public class MainPrompt extends JFrame {
 						Book book = it.next();
 						if (book.getISBN().equals(ISBNField.getText())) {
 							bookModel.remove(index);
+							ISBNField.setText("");
+							titleField.setText("");
 							return;
 						}
 					}
@@ -194,6 +198,8 @@ public class MainPrompt extends JFrame {
                 };
                 sorter.setRowFilter(filter);
                 bookTable.setRowSorter(sorter);
+                ISBNField.setText("");
+				titleField.setText("");
 			}
 		});
 		
@@ -261,6 +267,9 @@ public class MainPrompt extends JFrame {
         sortByISBNButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateContent();
+                sorter.setSortKeys(null);
+                sorter.setRowFilter(null);
+                bookTable.setRowSorter(sorter);
                 if(!reversedISBN) {
                     List<RowSorter.SortKey> sortKeys = new ArrayList<>(1);
                     sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
@@ -282,6 +291,9 @@ public class MainPrompt extends JFrame {
         sortByTitleButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateContent();
+                sorter.setSortKeys(null);
+                sorter.setRowFilter(null);
+                bookTable.setRowSorter(sorter);
                 if(!reversedTitle) {
                     List<RowSorter.SortKey> sortKeys = new ArrayList<>(2);
                     sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
