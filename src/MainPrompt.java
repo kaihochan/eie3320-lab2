@@ -103,7 +103,7 @@ public class MainPrompt extends JFrame {
                     JOptionPane.showMessageDialog(null, "Book is not selected.", "Error", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-				if (bookTable.getSelectedRow() != -1) {
+				if (ISBNField.getText().isEmpty()) {
 					selectedIndex = bookTable.convertRowIndexToModel(bookTable.getSelectedRow());
 					toggleButtonForEdit(true);
 					return;
@@ -154,7 +154,7 @@ public class MainPrompt extends JFrame {
                     JOptionPane.showMessageDialog(null, "Book is not selected.", "Error", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-				if (bookTable.getSelectedRow() != -1) {
+				if (ISBNField.getText().isEmpty()) {
 					bookModel.remove(bookTable.getSelectedRow());
 					return;
 				}
@@ -206,7 +206,7 @@ public class MainPrompt extends JFrame {
                     return;
                 }
 				BookDetailPrompt frame;
-				if (bookTable.getSelectedRow() != -1) {
+				if (ISBNField.getText().isEmpty()) {
 					frame = new BookDetailPrompt(bookList.get(bookTable.convertRowIndexToModel(bookTable.getSelectedRow())));
 					frame.setVisible(true);
 					return;
