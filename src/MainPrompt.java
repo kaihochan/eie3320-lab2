@@ -155,7 +155,6 @@ public class MainPrompt extends JFrame {
                     return;
                 }
 				if (bookTable.getSelectedRow() != -1) {
-					System.out.printf("SR:%s, CRI:%s%n", bookTable.getSelectedRow(), bookTable.convertRowIndexToModel(bookTable.getSelectedRow()));
 					bookModel.remove(bookTable.getSelectedRow());
 					return;
 				}
